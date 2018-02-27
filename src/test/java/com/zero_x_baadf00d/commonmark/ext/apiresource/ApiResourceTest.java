@@ -74,4 +74,35 @@ public class ApiResourceTest extends RenderingTestCase {
             "\n{% apiresource %}";
         assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
     }
+
+    @Test
+    public void apiResource_003() {
+        final String input = "{% apiresource %} GET /account/" +
+            "\n :Uid /view/ " +
+            "\n{type}" +
+            "\n{% apiresource %}";
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
+    }
+
+    @Test
+    public void apiResource_004() {
+        final String input = "{% apiresource %}GET /account/ :Uid /view/ {type}{% apiresource %}" +
+            "\n" +
+            "\n# Title 1";
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>\n<h1>Title 1</h1>\n");
+    }
+
+    @Test
+    public void apiResource_005() {
+        final String input = "{% apiresource %}" +
+            "\nGET /account/ :Uid /view/ {type}{% apiresource %}";
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
+    }
+
+    @Test
+    public void apiResource_006() {
+        final String input = "{% apiresource %}GET /account/ :Uid" +
+        "\n/view/ {type}{% apiresource %}";
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
+    }
 }

@@ -40,12 +40,12 @@ public class ApiResourceBlockParser extends AbstractBlockParser {
     /**
      * ApiResource bloc start boundary.
      */
-    private static final Pattern REGEX_BEGIN = Pattern.compile("^\\{% apiresource %}(\\s.*)?");
+    private static final Pattern REGEX_BEGIN = Pattern.compile("^\\{% apiresource %}(.*)?");
 
     /**
      * ApiResource bloc end boundary.
      */
-    private static final Pattern REGEX_END = Pattern.compile("^\\{% apiresource %}(\\s.*)?");
+    private static final Pattern REGEX_END = Pattern.compile("^(.*)?\\{% apiresource %}(\\s.*)?");
 
     /**
      * The found Api Resource block.
@@ -53,10 +53,38 @@ public class ApiResourceBlockParser extends AbstractBlockParser {
     private final ApiResourceBlock block;
 
     /**
-     * Build a default instance.
+     * Indicate if the block has been completely parser
+     * during the initialization.
      */
-    ApiResourceBlockParser() {
+    private final boolean completedAtInit;
+
+    /**
+     * Build a default instance.
+     *
+     * @param data Initial data
+     */
+    ApiResourceBlockParser(final String data) {
         this.block = new ApiResourceBlock();
+
+        this.parseLine(
+            data.replace("{% apiresource %}", "")
+        );
+        this.completedAtInit = data.indexOf("{% apiresource %}") != data.lastIndexOf("{% apiresource %}");
+    }
+
+    /**
+     * Parse the line.
+     *
+     * @param line The line to parse
+     */
+    private void parseLine(final String line) {
+        for (final String word : line.split("\\s+")) {
+            if (!word.isEmpty()) {
+                block.appendChild(
+                    new ApiResourceNode(word)
+                );
+            }
+        }
     }
 
     @Override
@@ -66,17 +94,20 @@ public class ApiResourceBlockParser extends AbstractBlockParser {
 
     @Override
     public BlockContinue tryContinue(final ParserState parserState) {
-        final CharSequence line = parserState.getLine();
-
-        if (REGEX_END.matcher(line).matches()) {
+        if (this.completedAtInit) {
             return BlockContinue.finished();
-        } else {
-            for (final String word : line.toString().split("\\s+")) {
-                block.appendChild(
-                    new ApiResourceNode(word)
-                );
-            }
         }
+
+        final String line = parserState.getLine().toString();
+        if (REGEX_END.matcher(line).matches()) {
+            if (line.indexOf("{% apiresource %}") == line.lastIndexOf("{% apiresource %}")
+                && line.indexOf("{% apiresource %}") > 0) {
+                this.parseLine(line.replace("{% apiresource %}", ""));
+            }
+            return BlockContinue.finished();
+        }
+
+        this.parseLine(line);
         return BlockContinue.atIndex(parserState.getIndex());
     }
 
@@ -93,7 +124,7 @@ public class ApiResourceBlockParser extends AbstractBlockParser {
             final CharSequence line = state.getLine();
             if (REGEX_BEGIN.matcher(line).matches()) {
                 return BlockStart.of(
-                    new ApiResourceBlockParser()
+                    new ApiResourceBlockParser(line.toString())
                 ).atIndex(
                     state.getNextNonSpaceIndex()
                 );
