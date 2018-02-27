@@ -73,6 +73,7 @@ public class ApiResourceBlockRenderer implements NodeRenderer {
                 html.tag("span", properties);
                 html.raw(n.getData().toUpperCase(Locale.ENGLISH));
                 html.tag("/span");
+                html.raw(" ");
 
                 // Path
                 properties.put("class", "path");

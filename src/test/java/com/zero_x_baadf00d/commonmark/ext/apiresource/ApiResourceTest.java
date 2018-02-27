@@ -23,7 +23,6 @@
  */
 package com.zero_x_baadf00d.commonmark.ext.apiresource;
 
-import com.zero_x_baadf00d.commonmark.ext.apiresource.ApiResourceExtension;
 import org.commonmark.Extension;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -63,7 +62,7 @@ public class ApiResourceTest extends RenderingTestCase {
         final String input = "{% apiresource %}" +
             "\nGET /account/ :Uid /view/ {type}" +
             "\n{% apiresource %}";
-        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span><span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
     }
 
     @Test
@@ -73,6 +72,6 @@ public class ApiResourceTest extends RenderingTestCase {
             "\n :Uid /view/ " +
             "\n{type}" +
             "\n{% apiresource %}";
-        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span><span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
+        assertRendering(input, "<div class=\"apiresource get\"><span class=\"method\">GET</span> <span class=\"path\">/account/<span class=\"variable\">:Uid</span>/view/<span class=\"variable\">{type}</span></span></div>");
     }
 }
