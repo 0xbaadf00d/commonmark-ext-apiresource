@@ -6,7 +6,7 @@
 
     <groupId>com.zero_x_baadf00d</groupId>
     <artifactId>commonmark-ext-apiresource</artifactId>
-    <version>18.02</version>
+    <version>19.02</version>
     <name>Atlassian CommonMark - Extension - API Resource</name>
     <description>commonmark-java extension for API Resource</description>
     <url>https://github.com/thibaultmeyer/commonmark-ext-apiresource</url>
